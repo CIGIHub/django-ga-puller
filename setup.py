@@ -22,9 +22,9 @@ setup(
     setup_requires=[
         'google-api-python-client >= 1.1',
     ],
-    requires=[
-        'google-api-python-client (>= 1.1)',
-    ],
+    #requires=[
+    #    'google-api-python-client (>= 1.1)',
+    #],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
