@@ -6,10 +6,6 @@ inherit from in your app.
 
 To Use
 ------
-Install the [Google APIs Client Library for Python](https://developers.google.com/api-client-library/python/):
-
-    pip install --upgrade google-api-python-client
-    
 
 Add the app to your settings.py file:
 
@@ -64,3 +60,5 @@ Create a python file named 'accounts.py' in the private directory with the follo
     service_account = 'xxxxxx@developer.gserviceaccount.com'
     view_id = '#########'
 
+
+This package uses [Google APIs Client Library for Python](https://developers.google.com/api-client-library/python/) which should automatically be installed through setup.
