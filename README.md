@@ -6,7 +6,17 @@ inherit from in your app.
 
 To Use
 ------
+Install the [Google APIs Client Library for Python](https://developers.google.com/api-client-library/python/):
 
+    pip install --upgrade google-api-python-client
+    
+
+Add the app to your settings.py file:
+
+    INSTALLED_APPS = [...
+                      'ga_puller',
+                      ...]
+                      
 In your app,
 
 Create models that inherit from the abstract classes provided.  Here is a sample of a basic implementation:
@@ -41,3 +51,16 @@ Add a list named analytics_import_models defining the data models to the __init_
 
     from models import DailyPageTrackingData, DailyEventData
     analytics_import_models = [DailyPageTrackingData, DailyEventData]
+    
+
+Create a 'private' python package at the root level of your django project (at the same level as the manage.py file).
+
+The application requires a service account for authentication with Google.  These can be configured by logging into your account at https://cloud.google.com.
+
+Copy your Google API private key file to the private directory (name it privatekey.pem). 
+
+Create a python file named 'accounts.py' in the private directory with the following code (update with your account data):
+ 
+    service_account = 'xxxxxx@developer.gserviceaccount.com'
+    view_id = '#########'
+
