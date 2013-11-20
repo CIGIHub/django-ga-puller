@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from apiclient.discovery import build
 from oauth2client.client import SignedJwtAssertionCredentials
-from google_analytics.private.accounts import service_account, view_id
+from private.accounts import service_account, view_id
 import datetime
 import httplib2
 import importlib
@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def _load_data(data_model, start_date):
-        f = file('google_analytics/private/privatekey.pem', 'rb')
+        f = file('private/privatekey.pem', 'rb')
         key = f.read()
         f.close()
         credentials = SignedJwtAssertionCredentials(service_account,
