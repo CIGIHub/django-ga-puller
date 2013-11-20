@@ -9,7 +9,8 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='django-ga-puller',
     version='0.1.0',
-    packages=['ga_puller'],
+    packages=['ga_puller', 'ga_puller.management', 'ga_puller.management.commands'],
+    include_package_data=True,
     license='MIT License',
     description='Django app used to pull daily Google Analytics data into your django database.',
     long_description=README,
@@ -17,14 +18,13 @@ setup(
     author='Caroline Simpson',
     author_email='csimpson@cigionline.org',
     install_requires=[
-        'google-api-python-client >= 1.1',
+        'google-api-python-client >= 1.2',
+        'pycrypto >= 2.6.1',
     ],
     setup_requires=[
-        'google-api-python-client >= 1.1',
+        'google-api-python-client >= 1.2',
+        'pycrypto >= 2.6.1',
     ],
-    #requires=[
-    #    'google-api-python-client (>= 1.1)',
-    #],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
