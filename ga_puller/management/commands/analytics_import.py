@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from apiclient.discovery import build
 from oauth2client.client import SignedJwtAssertionCredentials
-from private.accounts import service_account, view_id
+from private.accounts import service_account, view_ids
 import datetime
 import httplib2
 import importlib
@@ -39,6 +39,8 @@ class Command(BaseCommand):
         base_start_date = datetime.date(year=start_year, month=start_month, day=start_day)
 
         app_module = importlib.import_module(app)
+        view_id = view_ids[app]
+
         if not 'analytics_import_models'  in app_module.__dict__:
             raise CommandError("Module must contain list 'analytics_import_models' defining the analytics data models.")
 
@@ -46,10 +48,10 @@ class Command(BaseCommand):
             start_date = base_start_date + datetime.timedelta(days=i)
 
             for model in app_module.analytics_import_models:
-                self._load_data(model, start_date=start_date)
+                self._load_data(view_id, model, start_date=start_date)
 
     @staticmethod
-    def _load_data(data_model, start_date):
+    def _load_data(view_id, data_model, start_date):
         f = file('private/privatekey.pem', 'rb')
         key = f.read()
         f.close()

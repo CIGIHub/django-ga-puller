@@ -58,7 +58,13 @@ Copy your Google API private key file to the private directory (name it privatek
 Create a python file named 'accounts.py' in the private directory with the following code (update with your account data):
  
     service_account = 'xxxxxx@developer.gserviceaccount.com'
-    view_id = '#########'
+    view_ids = {'app_name': '#########', ...}
 
 
 This package uses [Google APIs Client Library for Python](https://developers.google.com/api-client-library/python/) which should automatically be installed through setup.
+
+
+Release Notes:
+
+0.1.0: Initial Release
+0.1.1: Updated to support importing from separate views in google analytics.
