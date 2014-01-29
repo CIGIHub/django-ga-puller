@@ -68,3 +68,4 @@ Release Notes:
 
 0.1.0: Initial Release
 0.1.1: Updated to support importing from separate views in google analytics.
+0.1.2: Increased the size of the label and page_path fields.
