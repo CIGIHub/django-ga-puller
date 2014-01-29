@@ -6,7 +6,7 @@ class DailyEventTrackingBase(models.Model):
     #page = models.ForeignKey('Page')
     category = models.CharField(max_length=50)
     action = models.CharField(max_length=20)
-    label = models.CharField(max_length=100)
+    label = models.CharField(max_length=2048)
     total_events = models.PositiveIntegerField(null=True)
     unique_events = models.PositiveIntegerField(null=True)
     data_sampled = models.NullBooleanField(null=True)
@@ -105,7 +105,7 @@ class DailyPageTrackingBase(models.Model):
 
 
 class AnalyticsPage(models.Model):
-    page_path = models.CharField(max_length=300)
+    page_path = models.CharField(max_length=2048)
 
     class Meta:
         abstract = True
