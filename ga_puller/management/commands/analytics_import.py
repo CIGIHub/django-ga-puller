@@ -80,8 +80,8 @@ class Command(BaseCommand):
 
         if 'rows' in feed:
             data_model.process_data(feed, start_date)
-            print("%s - %s - Processed data".format(start_date,
+            print("{} - {} - Processed data".format(start_date,
                                                     data_model.__name__))
         else:
-            print("%s - %s - No data available".format(start_date,
+            print("{} - {} - No data available".format(start_date,
                                                        data_model.__name__))
