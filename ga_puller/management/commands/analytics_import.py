@@ -25,7 +25,11 @@ class Command(BaseCommand):
                     default=1,
                     help='Number of days to pull'),
         make_option('--app', '-a', dest='app',
-                    help='Name of app to import data related to')
+                    help='Name of app to import data related to'),
+        make_option('--key', '-k', dest='key',
+                    default='private/privatekey.pem',
+                    help='Location of the private key file'
+                    )
     )
     help = 'Imports analytics data'
 
@@ -34,25 +38,27 @@ class Command(BaseCommand):
         start_month = int(options["start_month"])
         start_day = int(options["start_day"])
         num_days = int(options["num_days"])
-        app = options['app']
+        app = options["app"]
+        key_file_name = options["key"]
 
         base_start_date = datetime.date(year=start_year, month=start_month, day=start_day)
 
         app_module = importlib.import_module(app)
         view_id = view_ids[app]
 
-        if not 'analytics_import_models'  in app_module.__dict__:
+        if 'analytics_import_models' not in app_module.__dict__:
             raise CommandError("Module must contain list 'analytics_import_models' defining the analytics data models.")
 
         for i in range(0, num_days):
             start_date = base_start_date + datetime.timedelta(days=i)
 
             for model in app_module.analytics_import_models:
-                self._load_data(view_id, model, start_date=start_date)
+                self._load_data(view_id, model, start_date=start_date,
+                                key_file_name=key_file_name)
 
     @staticmethod
-    def _load_data(view_id, data_model, start_date):
-        f = file('private/privatekey.pem', 'rb')
+    def _load_data(view_id, data_model, start_date, key_file_name):
+        f = open(key_file_name, 'rb')
         key = f.read()
         f.close()
         credentials = SignedJwtAssertionCredentials(service_account,
@@ -74,6 +80,8 @@ class Command(BaseCommand):
 
         if 'rows' in feed:
             data_model.process_data(feed, start_date)
-            print "%s - %s - Processed data" % (start_date, data_model.__name__)
+            print("%s - %s - Processed data".format(start_date,
+                                                    data_model.__name__))
         else:
-            print "%s - %s - No data available" % (start_date, data_model.__name__)
+            print("%s - %s - No data available".format(start_date,
+                                                       data_model.__name__))
