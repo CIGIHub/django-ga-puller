@@ -55,7 +55,7 @@ The application requires a service account for authentication with Google.  Thes
 
 Copy your Google API private key file to the private directory (name it privatekey.pem). 
 
-Create a python file named 'accounts.py' in the private directory with the following code (update with your account data):
+Add django settings:
  
     service_account = 'xxxxxx@developer.gserviceaccount.com'
     view_ids = {'app_name': '#########', ...}
@@ -69,3 +69,4 @@ Release Notes:
 0.1.0: Initial Release
 0.1.1: Updated to support importing from separate views in google analytics.
 0.1.2: Increased the size of the label and page_path fields.
+0.1.5: Removed the accounts.py file and moved the data into the django settings file.
