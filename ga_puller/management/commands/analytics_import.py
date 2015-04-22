@@ -44,7 +44,7 @@ class Command(BaseCommand):
         base_start_date = datetime.date(year=start_year, month=start_month, day=start_day)
 
         app_module = importlib.import_module(app)
-        view_id = settings.view_ids[app]
+        view_id = settings.VIEW_IDS[app]
 
         if 'analytics_import_models' not in app_module.__dict__:
             raise CommandError("Module must contain list 'analytics_import_models' defining the analytics data models.")
@@ -61,7 +61,7 @@ class Command(BaseCommand):
         f = open(key_file_name, 'rb')
         key = f.read()
         f.close()
-        credentials = SignedJwtAssertionCredentials(settings.service_account,
+        credentials = SignedJwtAssertionCredentials(settings.SERVICE_ACCOUNT,
                                                     key,
                                                     scope='https://www.googleapis.com/auth/analytics.readonly')
         http = httplib2.Http()
