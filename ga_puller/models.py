@@ -110,3 +110,55 @@ class AnalyticsPage(models.Model):
     class Meta:
         abstract = True
 
+
+class DailyVisitorTrackingBase(models.Model):
+    date = models.DateField()
+    sessions = models.PositiveIntegerField(null=True)
+    users = models.PositiveIntegerField(null=True)
+    average_session_duration= models.FloatField(null=True)
+    bounce_rate = models.FloatField(null=True)
+    data_sampled = models.NullBooleanField(null=True)
+
+    def __unicode__(self):
+        return "{}: {} - {} - {} - {}".format(
+            self.date,
+            self.sessions,
+            self.users,
+            self.average_session_duration,
+            self.data_sampled
+        )
+
+    class Meta:
+        abstract = True
+
+    @staticmethod
+    def get_metrics():
+        return 'ga:sessions,ga:users,ga:avgSessionDuration,ga:bounceRate'
+    @staticmethod
+    def get_dimensions():
+        return ''
+
+    @staticmethod
+    def get_filters():
+        return 'ga:pagePath!~^/404.html*'
+
+    @staticmethod
+    def get_sort():
+        return 'ga:sessions'
+
+    @classmethod
+    def get_page_class(cls):
+        raise NotImplementedError()
+
+    @classmethod
+    def process_data(cls, data, date):
+        data_sampled = data["containsSampledData"]
+        for sessions, users, average_session_duration, bounce_rate in data['rows']:
+            data, created = cls.objects.get_or_create(date=date)
+            data.sessions = sessions
+            data.users = users
+            data.average_session_duration = average_session_duration
+            data.bounce_rate = bounce_rate
+            data.data_sampled = data_sampled
+            data.save()
+
