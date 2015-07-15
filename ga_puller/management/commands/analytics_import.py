@@ -28,8 +28,7 @@ class Command(BaseCommand):
                     help='Name of app to import data related to'),
         make_option('--key', '-k', dest='key',
                     default='private/privatekey.pem',
-                    help='Location of the private key file'
-                    )
+                    help='Location of the private key file'),
     )
     help = 'Imports analytics data'
 
@@ -40,6 +39,7 @@ class Command(BaseCommand):
         num_days = int(options["num_days"])
         app = options["app"]
         key_file_name = options["key"]
+        verbosity = int(options["verbosity"])
 
         base_start_date = datetime.date(year=start_year, month=start_month, day=start_day)
 
@@ -54,10 +54,10 @@ class Command(BaseCommand):
 
             for model in app_module.analytics_import_models:
                 self._load_data(view_id, model, start_date=start_date,
-                                key_file_name=key_file_name)
+                                key_file_name=key_file_name, verbosity=verbosity)
 
     @staticmethod
-    def _load_data(view_id, data_model, start_date, key_file_name):
+    def _load_data(view_id, data_model, start_date, key_file_name, verbosity=1):
         f = open(key_file_name, 'rb')
         key = f.read()
         f.close()
@@ -80,8 +80,8 @@ class Command(BaseCommand):
 
         if 'rows' in feed:
             data_model.process_data(feed, start_date)
-            print("{} - {} - Processed data".format(start_date,
-                                                    data_model.__name__))
+            if verbosity > 1: print("{} - {} - Processed data".format(start_date,
+                                                                data_model.__name__))
         else:
-            print("{} - {} - No data available".format(start_date,
-                                                       data_model.__name__))
+            if verbosity > 1: print("{} - {} - No data available".format(start_date,
+                                                                   data_model.__name__))
