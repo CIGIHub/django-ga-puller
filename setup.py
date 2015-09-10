@@ -22,7 +22,7 @@ setup(
         'pycrypto >= 2.6.1',
     ],
     setup_requires=[
-        'google-api-python-client >= 1.2',
+        'google-api-python-client == 1.2',
         'pycrypto >= 2.6.1',
     ],
     classifiers=[
