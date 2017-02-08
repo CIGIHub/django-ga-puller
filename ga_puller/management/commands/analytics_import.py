@@ -2,7 +2,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from apiclient.discovery import build
-from oauth2client.client import SignedJwtAssertionCredentials
+from oauth2client.service_account import ServiceAccountCredentials
 from django.conf import settings
 import datetime
 import httplib2
@@ -58,12 +58,11 @@ class Command(BaseCommand):
 
     @staticmethod
     def _load_data(view_id, data_model, start_date, key_file_name, verbosity=1):
-        f = open(key_file_name, 'rb')
-        key = f.read()
-        f.close()
-        credentials = SignedJwtAssertionCredentials(settings.SERVICE_ACCOUNT,
-                                                    key,
-                                                    scope='https://www.googleapis.com/auth/analytics.readonly')
+        credentials = ServiceAccountCredentials.from_p12_keyfile(
+            settings.SERVICE_ACCOUNT,
+            key_file_name,
+            scopes=['https://www.googleapis.com/auth/analytics.readonly']
+        )
         http = httplib2.Http()
         http = credentials.authorize(http)
         service = build('analytics', 'v3', http=http)
