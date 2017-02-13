@@ -66,15 +66,33 @@ class Command(BaseCommand):
         http = httplib2.Http()
         http = credentials.authorize(http)
         service = build('analytics', 'v3', http=http)
-        data_query = service.data().ga().get(ids='ga:%s' % view_id,
-                                             metrics=data_model.get_metrics(),
-                                             start_date=start_date.strftime("%Y-%m-%d"),
-                                             end_date=start_date.strftime("%Y-%m-%d"),
-                                             dimensions=data_model.get_dimensions(),
-                                             sort=data_model.get_sort(),
-                                             segment='gaid::-1',
-                                             filters=data_model.get_filters(),
-                                             max_results=10000)
+
+        filters = data_model.get_filters()
+
+        if filters:
+            data_query = service.data().ga().get(
+                ids='ga:%s' % view_id,
+                metrics=data_model.get_metrics(),
+                start_date=start_date.strftime("%Y-%m-%d"),
+                end_date=start_date.strftime("%Y-%m-%d"),
+                dimensions=data_model.get_dimensions(),
+                sort=data_model.get_sort(),
+                segment='gaid::-1',
+                filters=filters,
+                max_results=10000
+            )
+        else:
+            data_query = service.data().ga().get(
+                ids='ga:%s' % view_id,
+                metrics=data_model.get_metrics(),
+                start_date=start_date.strftime("%Y-%m-%d"),
+                end_date=start_date.strftime("%Y-%m-%d"),
+                dimensions=data_model.get_dimensions(),
+                sort=data_model.get_sort(),
+                segment='gaid::-1',
+                max_results=10000
+            )
+
         feed = data_query.execute()
 
         if 'rows' in feed:
