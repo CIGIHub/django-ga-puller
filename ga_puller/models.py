@@ -3,7 +3,6 @@ from django.db import models
 
 class DailyEventTrackingBase(models.Model):
     date = models.DateField()
-    #page = models.ForeignKey('Page')
     category = models.CharField(max_length=50)
     action = models.CharField(max_length=20)
     label = models.CharField(max_length=2048)
@@ -53,11 +52,12 @@ class DailyEventTrackingBase(models.Model):
 
 class DailyPageTrackingBase(models.Model):
     date = models.DateField()
-    #page = models.ForeignKey('Page')
     visit_bounce_rate = models.FloatField(null=True)
     average_time_on_page = models.FloatField(null=True)
     exit_rate = models.FloatField(null=True)
     page_views = models.PositiveIntegerField(null=True)
+    exits = models.PositiveIntegerField(null=True)
+    time_on_page = models.FloatField(null=True)
     unique_page_views = models.PositiveIntegerField(null=True)
     data_sampled = models.NullBooleanField(null=True)
 
@@ -71,7 +71,7 @@ class DailyPageTrackingBase(models.Model):
 
     @staticmethod
     def get_metrics():
-        return 'ga:visitBounceRate,ga:pageviews,ga:uniquePageviews,ga:avgTimeOnPage,ga:exitRate'
+        return 'ga:visitBounceRate,ga:pageviews,ga:uniquePageviews,ga:avgTimeOnPage,ga:exitRate,ga:exits,ga:timeOnPage'
 
     @staticmethod
     def get_dimensions():
@@ -92,13 +92,15 @@ class DailyPageTrackingBase(models.Model):
     @classmethod
     def process_data(cls, data, date):
         data_sampled = data["containsSampledData"]
-        for page_path, visit_bounce_rate, page_views, unique_page_views, avg_time_on_page, exit_rate in data["rows"]:
+        for page_path, visit_bounce_rate, page_views, unique_page_views, avg_time_on_page, exit_rate, exits, time_on_page in data["rows"]:
             page, created = cls.get_page_class().objects.get_or_create(page_path=page_path)
             data, created = cls.objects.get_or_create(date=date, page=page)
             data.visit_bounce_rate = visit_bounce_rate
             data.average_time_on_page = avg_time_on_page
             data.exit_rate = exit_rate
             data.page_views = page_views
+            data.exits = exits
+            data.time_on_page = time_on_page
             data.unique_page_views = unique_page_views
             data.data_sampled = data_sampled
             data.save()

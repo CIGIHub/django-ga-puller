@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-ga-puller',
-    version='0.1.5',
+    version='0.1.6',
     packages=['ga_puller', 'ga_puller.management', 'ga_puller.management.commands'],
     include_package_data=True,
     license='MIT License',
